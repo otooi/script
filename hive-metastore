@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+#       /etc/rc.d/init.d/hive-metastore
+#
+# Start hive-metastore service
+#
+# chkconfig: 35 90 90
+# description: Start hive-metastore service
+
+##
+## hive-metastore rc script for RHEL/CentOS
+##
+## Author
+##     Jae Lee <otooiland at gmail period com>
+##
+## Version
+##     1.0
+##
+## Usage
+##     hive-metastore {start|stop|restart}
+##
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+PROG=hive-metastore
+
+HIVE_PATH=/usr/local/hive
+
+hive-metastore_start() {
+    $HIVE_PATH/bin/hive --service metastore 2>/dev/null 1>&2 &
+}
+
+hive-metastore_stop() {
+    kill -9 `ps -ef | grep hive | grep -v grep | awk '{print $2}'` 2>/dev/null 1>&2
+}
+
+start() {
+    action "Starting hive-metastore services ..." hive-metastore_start
+}
+
+stop() {
+    action "Stopping hive-metastore services ..." hive-metastore_stop
+}
+
+case "$1" in
+    start)   start
+             ;;
+    
+    stop)    stop
+             ;;
+    
+    restart) stop
+             start
+             ;;
+    
+    *)       echo "Usage: service $PROG {start|stop|restart}" 1>&2
+             ;;
+esac
+
+# ;;; Local Variables: ***
+# ;;; mode: shell-script ***
+# ;;; indent-tabs-mode: nil ***
+# ;;; End: ***
