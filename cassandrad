@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+#       /etc/rc.d/init.d/cassandrad
+#
+# Start cassandra service
+#
+# chkconfig: 35 90 90
+# description: Start cassandra service
+
+##
+## cassandra rc script for RHEL/CentOS
+##
+## Author
+##     Jae Lee <otooiland at gmail period com>
+##
+## Version
+##     1.0
+##
+## Usage
+##     cassandrad {start|stop|restart}
+##
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+PROG=cassandrad
+
+CASSANDRA_PATH=/usr/local/cassandra
+CASSANDRA_USER=etretat
+
+cassandra_start() {
+    su - $CASSANDRA_USER $CASSANDRA_PATH/bin/cassandra 2>/dev/null 1>&2 &
+}
+
+cassandra_stop() {
+    kill -9 `ps -ef | grep cassandra | grep -v grep | awk '{print $2}'` 2>/dev/null 1>&2
+}
+
+start() {
+    action "Starting cassandra services ..." cassandra_start
+}
+
+stop() {
+    action "Stopping cassandra services ..." cassandra_stop
+}
+
+case "$1" in
+    start)   start
+             ;;
+    
+    stop)    stop
+             ;;
+    
+    restart) stop
+             start
+             ;;
+    
+    *)       echo "Usage: service $PROG {start|stop|restart}" 1>&2
+             ;;
+esac
+
+# ;;; Local Variables: ***
+# ;;; mode: shell-script ***
+# ;;; indent-tabs-mode: nil ***
+# ;;; End: ***

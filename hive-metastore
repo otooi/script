@@ -26,9 +26,10 @@
 PROG=hive-metastore
 
 HIVE_PATH=/usr/local/hive
+HIVE_USER=etretat
 
 hive-metastore_start() {
-    $HIVE_PATH/bin/hive --service metastore 2>/dev/null 1>&2 &
+    su - $HIVE_USER $HIVE_PATH/bin/hive --service metastore 2>/dev/null 1>&2 &
 }
 
 hive-metastore_stop() {
